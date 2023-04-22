@@ -1,0 +1,72 @@
+.dropDown {
+    margin-top: 5px;
+    width: 87px;
+  }
+  
+  .dropDown:hover {
+    cursor: pointer;
+  }
+  
+  .dropDownContent {
+    display: none;
+    z-index: 1;
+  }
+  
+  .option {
+    display: block;
+    border: 1px solid darkblue;
+    border-radius: 2px;
+    background-color: lightblue;
+    margin: 2px;
+    width: 100px;
+    z-index: 1;
+    transition: all .2s ease-in-out;
+  }
+  
+  .option:hover {
+    cursor: pointer;
+    border: 3px dotted darkblue;
+    transform: scale(1.1);
+  }
+  
+  .dropDown:hover .dropDownContent {
+    display: block;
+  }
+  
+  .dropDown:hover .dropbtn {
+    background-color: #f1f1f1;
+  }
+
+
+  /* Visualizing the keys */
+  /* .gridContainer {
+    display: grid;
+    text-align: center;
+ 
+  }
+
+  .keys {
+    grid-row: 1;
+    border: solid darkblue;
+    color: purple;
+    padding: 0;
+    margin: 20px 5px;
+  } */
+
+  /* Visualizing the search results */
+
+  .table {
+    width: 100%;
+    border: 1px solid;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  .tr, .td, .th {
+    border: solid 1px;
+  }
+
+  /* .editableTd {
+    border: solid 1px;
+    background-color: blanchedalmond;
+  } */
