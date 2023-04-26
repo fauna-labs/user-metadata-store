@@ -23,12 +23,14 @@ export default function Login(props) {
     const signinHandler = (e) => {
         e.preventDefault();            
         db.query(`Login("${email}","${password}")`).then(result => {
+            console.log(result.document.company.id);
             if(!result) {
                 setInvalidPassword(true);
             } else {
                 const userInfo = {
                     email: result.document.name,
                     id: result.document.id,
+                    companyId: result.document.company.id,
                     key: result.secret
                 }
                 window.localStorage.setItem("employeeManager-loggedInUser", JSON.stringify(userInfo));

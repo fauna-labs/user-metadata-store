@@ -5,10 +5,10 @@ import styles from "../src/styles/EditEmployeeInfo.module.css"
 export default function EditEmployeeInfo(props) {
     const db = new FaunaClient(process.env.NEXT_PUBLIC_FAUNA_KEY);
     const [modal, setModal] = useState(false);
-    const [copyOfRole, setCopyOfRole] = useState("");
-    const [copyOfSalary, setCopyOfSalary] = useState(0);
-    const [editSalary, setEditSalary] = useState(false);
-    const [editRole, setEditRole] = useState(false);
+
+    const [employeeInfo, setEmployeeInfo] = useState({...props.info}) 
+
+    console.log(employeeInfo);
 
     const setModalVisible = (e) => {
         e.preventDefault();
@@ -20,38 +20,22 @@ export default function EditEmployeeInfo(props) {
         setModal(false);
     }
 
-    const allowEditPosition = (e) => {
-        e.preventDefault();
-        setEditRole(true);
-        setCopyOfRole(props.role)
-    }
-
-    const allowEditSalary = (e) => {
-        e.preventDefault();
-        setEditSalary(true);
-        setCopyOfSalary(props.salary)
-    }
-
-    const changePositionHandler = (e) => {
-        setCopyOfRole(e.target.value);
-    }
-
-    const changeSalaryHandler = (e) => {
-        setCopyOfSalary(e.target.value);
+    /** 💍 One Ringg to Rule em All 🧙‍♂️*/
+    const handleChange = (e) => {
+        setEmployeeInfo({
+            ...employeeInfo,
+            [e.target.name]: e.target.value
+        })
     }
 
     const updateEmployeeData = (e) => {
         e.preventDefault();
+        const updatedValues = {...employeeInfo}
+        delete updatedValues.id;
         db.query(`
-            let employeeToEdit = Employee.byId("${props.id}");
+            let employeeToUpdate = Employee.byId("${props.info.id}");
 
-            if(${copyOfSalary} != 0) {
-                employeeToEdit.update({"salary" : ${copyOfSalary} })
-            }
-
-            if("${copyOfRole}" != "") {
-                employeeToEdit.update({"role" : "${copyOfRole}" })
-            }
+            employeeToUpdate.update(${JSON.stringify(updatedValues)})
         `).then(result => {
             console.log(result);
             setModal(false);
@@ -76,30 +60,45 @@ export default function EditEmployeeInfo(props) {
                                     <tr className={styles.tr}>
                                         <th className={styles.th}>First Name</th>
                                         <th className={styles.th}>Last Name</th>
-                                        <th className={styles.th}>Position</th>
                                         <th className={styles.th}>Salary</th>
                                         <th className={styles.th}>Date Joined</th>
-                                        <th className={styles.th}>Phone #</th>
-                                        <th className={styles.th}>Employee Id</th>
                                         <th className={styles.th}>Direct Report</th>
+                                        <th className={styles.th}>Employee Id</th>
+                                        <th className={styles.th}>Phone #</th>
+                                        <th className={styles.th}>Position</th>
+                                        <th className={styles.th}>Privilege</th>
                                     </tr>
                                     </thead>
 
                                     {/* Visualizing the information based on the search */}
                                     <tbody>
                                         <tr className={styles.tr}>
-                                            <td className={styles.td}>{props.firstName}</td>
-                                            <td className={styles.td}>{props.lastName}</td>
+                                        <td  className={styles.editableTd}>
+                                            <input onChange={handleChange} value={employeeInfo.firstName} name="firstName"/>
+                                        </td>
+                                        <td  className={styles.editableTd}>
+                                            <input onChange={handleChange} value={employeeInfo.lastName} name="lastName"/>
+                                        </td>
+                                        <td  className={styles.editableTd}>
+                                            <input onChange={handleChange} value={employeeInfo.salary} name="salary"/>
+                                        </td>
+                                        <td className={styles.td}>{props.info.dateJoined}</td>
 
+                                        <td  className={styles.editableTd}>
+                                            <input onChange={handleChange} value={employeeInfo.directReport} name="directReport"/>
+                                        </td>
 
-                                            {editRole ? (<td  className={styles.editableTd}><input onChange={changePositionHandler} value={copyOfRole}/></td>) : (<td onClick={allowEditPosition} className={styles.editableTd}>{props.role}</td>)}
-                                            
-                                            {editSalary ? (<td className={styles.editableTd}><input onChange={changeSalaryHandler} value={copyOfSalary}/></td>) : (<td onClick={allowEditSalary} className={styles.editableTd}>{props.salary}</td>)}
-                                            
-                                            <td className={styles.td}>{props.dateJoined}</td>
-                                            <td className={styles.td}>{props.phoneNum}</td>
-                                            <td className={styles.td}>{props.employeeId}</td>
-                                            <td className={styles.td}>{props.directReport}</td>
+                                        <td className={styles.td}>{props.info.employeeId}</td>
+
+                                        <td  className={styles.editableTd}>
+                                            <input onChange={handleChange} value={employeeInfo.phoneNum} name="phoneNum"/>
+                                        </td>
+                                        <td  className={styles.editableTd}>
+                                            <input onChange={handleChange} value={employeeInfo.position} name="position"/>
+                                        </td>
+                                        <td  className={styles.editableTd}>
+                                            <input onChange={handleChange} value={employeeInfo.privilege} name="privilege"/>
+                                        </td>
                                         </tr>
                                     </tbody>
 
