@@ -1,139 +1,222 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "../src/styles/ManageAccounts.module.css";
 import FaunaClient from "../Faunadoo";
 
 export default function Search(props) {
-    const db = new FaunaClient(process.env.NEXT_PUBLIC_FAUNA_KEY);
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [searchByFirstName, setSearchByFirstName] = useState(false);
-    const [searchByLastName, setSearchByLastName] = useState(false);
-    const [searchBySalary, setSearchBySalary] = useState(false);
-    const [searchByReport, setSearchByReport] = useState(false);
-    const [inputOne, setInputOne] = useState("");
-    const [inputTwo, setInpuTwo] = useState("");
+  const db = new FaunaClient(process.env.NEXT_PUBLIC_FAUNA_KEY);
+  const [searchOptions, setSearchOptions] = useState({
+    firstName: false,
+    lastName: false,
+    salary: false,
+    report: false,
+  });
 
-    const handleOptionSelection = (e) => {
-        e.preventDefault();
-        setSelectedOption(e.target.innerText);
-      }
-    
-      useEffect(() => {
-        if(selectedOption == "First Name") {
-          setSearchByFirstName(true);
-          setSearchByLastName(false);
-          setSearchBySalary(false);
-          setSearchByReport(false);
-        } else if (selectedOption == "Last Name") {
-          setSearchByFirstName(false);
-          setSearchByLastName(true);
-          setSearchBySalary(false);
-          setSearchByReport(false);
-        } else if (selectedOption == "Salary") {
-          setSearchByFirstName(false);
-          setSearchByLastName(false);
-          setSearchBySalary(true);
-          setSearchByReport(false);
-        } else if (selectedOption == "Direct Report") {
-          setSearchByFirstName(false);
-          setSearchByLastName(false);
-          setSearchBySalary(false);
-          setSearchByReport(true);
-        }
-      }, [selectedOption]);
-    
-      const handleInputOne = (e) => {
-        setInputOne(e.target.value);
-      }
-    
-      const handleInputTwo = (e) => {
-        setInpuTwo(e.target.value);
-      }
+  const [inputValues, setInputValues] = useState({
+    firstName: "",
+    lastName: "",
+    minSalary: "",
+    maxSalary: "",
+    report: "",
+  });
 
-      const searchHandler = (e) => {
-        e.preventDefault();
-        const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
-        if (inputOne == "") {
-            db.query(`
-                let company = Company.byId("${localStorageContent.companyId}")
-                Employee.byCompany(company)`).then(result => {
-                console.log(result);
-                props.searchResponse(result?.data);
-            })
-        } else {
-            if(e.target.name == "firstName") {
-                db.query(`Employee.byFirstName("${inputOne}")`).then(result => {
-                    props.searchResponse(result.data)
-                  });
-            } else if (e.target.name == "lastName") {
-                db.query(`Employee.byLastName("${inputOne}")`).then(result => {
-                    props.searchResponse(result.data)
-                });
-            } else if (e.target.name == "salary") {
-                db.query(`
-                    let company = Company.byId("${localStorageContent.companyId}")
-                    Employee.byCompany(company).where(.salary >= ${inputOne} && .salary <= ${inputTwo})`).then(result => {
-                    props.searchResponse(result.data)
-                });
-            } else {
-                let separatedInput = inputOne.split(' ');
-                console.log(separatedInput);
-                db.query(`
-                   let foundDirectReport = Employee.byFirstName("${separatedInput[0]}").where(.lastName == "${separatedInput[1]}").first()
+  const handleOptionSelection = (e) => {
+    setSearchOptions({ ...searchOptions, [e.target.name]: e.target.checked });
+    console.log(searchOptions);
+  };
 
-                   Employee.byDirectReport(foundDirectReport)
-                `).then(result => {
-                    // console.log(result);
-                    props.searchResponse(result.data)
-                });
-            }}
-        }
+  const handleInputChange = (e) => {
+    setInputValues({ ...inputValues, [e.target.name]: e.target.value });
+  };
 
-    return (
-        <>
-            {/* Search By... Selector */}
-            <div className={styles.dropDown}>
-                <button className={styles.dropBtn}>Search by...</button>
-                <div className={styles.dropDownContent}>
-                    <div className={styles.option} onClick={handleOptionSelection}>First Name</div>
-                    <div className={styles.option} onClick={handleOptionSelection}>Last Name</div>
-                    <div className={styles.option} onClick={handleOptionSelection}>Salary</div>
-                    <div className={styles.option} onClick={handleOptionSelection}>Direct Report</div>
-                </div>
-            </div>
+  const searchHandler = (e) => {
+    e.preventDefault();
+    const localStorageContent = JSON.parse(
+      localStorage.getItem("employeeManager-loggedInUser")
+    );
+  
+    let separatedInput = inputValues.report.split(' ');
+  
+    let query = `
+    let company = Company.byId("${localStorageContent.companyId}")
+    let foundDirectReport = Employee.byFirstName("${separatedInput[0]}").where(.lastName == "${separatedInput[1]}").first()
+  
+    Employee.byCompany(company)`;
+  
+    const conditions = [];
+  
+    if (searchOptions.firstName) {
+      conditions.push(`.firstName == "${inputValues.firstName}"`);
+    }
+  
+    if (searchOptions.lastName) {
+      conditions.push(`.lastName == "${inputValues.lastName}"`);
+    }
+  
+    if (searchOptions.salary) {
+      conditions.push(
+        `.salary >= ${inputValues.minSalary} && .salary <= ${inputValues.maxSalary}`
+      );
+    }
+  
+    if (searchOptions.report) {
+      conditions.push(`.directReport == foundDirectReport`);
+    }
+  
+    if (conditions.length > 0) {
+      query += `.where(${conditions.join(" && ")})`;
+    }
 
-            {/* Search selector displayed below based on above selection */}
-            
-            <div>
-            {searchByFirstName ? (
-            <div>
-                <h3>search by first name</h3>
-                <input onChange={handleInputOne}/>
-                <button onClick={searchHandler} name="firstName">Search</button>
-            </div>
-            ) : null}
-            {searchByLastName ? (
-            <div>
-                <h3>search by last name</h3>
-                <input onChange={handleInputOne}/>
-                <button onClick={searchHandler} name="lastName">Search</button>
-            </div>
-            ) : null}
-            {searchBySalary ? (
-            <div>
-                <h3>search by salary range</h3>
-                range from <input onChange={handleInputOne}/> to <input onChange={handleInputTwo} />
-                <button onClick={searchHandler} name="salary">Search</button>
-            </div>
-            ) : null}
-            {searchByReport ? (
-            <div>
-                <h3>search by direct report, use full name</h3>
-                <input onChange={handleInputOne}/>
-                <button onClick={searchHandler} name="directReport">Search</button>
-            </div>
-            ) : null}
-            </div>        
-        </>
+    query += `{
+        id,
+        firstName,
+        lastName,
+        salary,
+        dateJoined,
+        directReport {
+          firstName,
+          lastName
+        },
+        employeeId,
+        phoneNum,
+        position,
+        privilege
+    }`
+  
+    console.log(query);
+  
+    db.query(`${query}`).then((result) => {
+      console.log(result);
+      props.searchResponse(result?.data);
+    });
+  };  
 
-    )
+
+  const clearSearchHandler = (e) => {
+    e.preventDefault();
+    const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
+    setSearchOptions({
+        firstName: false,
+        lastName: false,
+        salary: false,
+        report: false,
+      });
+  
+      setInputValues({
+        firstName: "",
+        lastName: "",
+        minSalary: "",
+        maxSalary: "",
+        report: "",
+      });
+
+    db.query(`
+    let company = Company.byId("${localStorageContent.companyId}");
+    Employee.byCompany(company)
+    `).then(result => {
+        props.searchResponse(result?.data);
+    })
+  }
+
+  return (
+    <>
+      <div>
+        <h3>Search options</h3>
+        <label>
+          <input
+            type="checkbox"
+            name="firstName"
+            checked={searchOptions.firstName}
+            onChange={handleOptionSelection}
+          />{" "}
+          First Name
+        </label>
+        <br />
+        <label>
+          <input
+            type="checkbox"
+            name="lastName"
+            checked={searchOptions.lastName}
+            onChange={handleOptionSelection}
+          />{" "}
+          Last Name
+        </label>
+        <br />
+        <label>
+          <input
+            type="checkbox"
+            name="salary"
+            checked={searchOptions.salary}
+            onChange={handleOptionSelection}
+          />{" "}
+          Salary
+        </label>
+        <br />
+        <label>
+          <input
+            type="checkbox"
+            name="report"
+            checked={searchOptions.report}
+            onChange={handleOptionSelection}
+          />{" "}
+          Direct Report
+        </label>
+      </div>
+
+      <div>
+      <h3>Enter search query</h3>
+        {searchOptions.firstName && (
+          <div>
+            <label>First Name: </label>
+            <input
+              name="firstName"
+              value={inputValues.firstName}
+              onChange={handleInputChange}
+              placeholder="First Name"
+            />
+          </div>
+        )}
+        {searchOptions.lastName && (
+          <div>
+            <label>Last Name: </label>
+            <input
+              name="lastName"
+              value={inputValues.lastName}
+              onChange={handleInputChange}
+              placeholder="Last Name"
+            />
+          </div>
+        )}
+        {searchOptions.salary && (
+          <div>
+            <label>Salary Range: </label>
+            <input
+              name="minSalary"
+              value={inputValues.minSalary}
+              onChange={handleInputChange}
+              placeholder="Min Salary"
+            />
+            <input
+              name="maxSalary"
+              value={inputValues.maxSalary}
+              onChange={handleInputChange}
+              placeholder="Max Salary"
+            />
+          </div>
+        )}
+        {searchOptions.report && (
+          <div>
+            <label>Direct Report: </label>
+            <input
+              name="report"
+              value={inputValues.report}
+              onChange={handleInputChange}
+              placeholder="Full Name"
+            />
+          </div>
+        )}
+        <button onClick={searchHandler}>Search</button>
+        <button onClick={clearSearchHandler}>Clear</button>
+      </div>
+    </>
+  );
 }

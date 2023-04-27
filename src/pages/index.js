@@ -56,7 +56,7 @@ export default function Home() {
       },
       privilege
     }`).then(result => {
-      console.log(result);
+      console.log("BLEH",result);
       setSearchResult(result?.data);
     })
   }
