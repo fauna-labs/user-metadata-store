@@ -1,15 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import  styles from "../styles/AddEmployee.module.css";
 import FaunaClient from "../../Faunadoo";
 import { useRouter } from "next/router"; 
-
 
 export default function AddEmployee() {
     const db = new FaunaClient(process.env.NEXT_PUBLIC_FAUNA_KEY);
     const router = useRouter();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [role, setRole] = useState("");
+    const [position, setPosition] = useState("");
     const [salary, setSalary] = useState(0);
     const [dateJoined, setDateJoined] = useState(null);
     const [phoneNum, setPhoneNum] = useState("");
@@ -17,6 +16,26 @@ export default function AddEmployee() {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [directReport, setDirectReport] = useState([]);
+    const [directReportPersonnel, setDirecReportPersonnel] = useState([]);
+    const [privilege, setPrivilege] = useState("EMPLOYEE");
+
+
+    useEffect(() => {
+        getDirectReportPersonnel();
+    }, [])
+
+    const getDirectReportPersonnel = () => {
+        const localStorageContent = JSON.parse(
+            localStorage.getItem("employeeManager-loggedInUser")
+          );
+        
+        db.query(`
+            let company = Company.byId("${localStorageContent.companyId}")
+            Employee.byCompany(company).where(.privilege == "MANAGER" || .privilege == "ADMIN")
+        `).then(result => {
+            setDirecReportPersonnel(result.data);
+        })
+    }
 
     const firstNameHandler = (e) => {
         setFirstName(e.target.value);
@@ -26,8 +45,8 @@ export default function AddEmployee() {
         setLastName(e.target.value);
     }
 
-    const roleHandler = (e) => {
-        setRole(e.target.value);
+    const positionHandler = (e) => {
+        setPosition(e.target.value);
     }
 
     const salaryHandler = (e) => {
@@ -60,21 +79,7 @@ export default function AddEmployee() {
         let company = Company.byId("${localStorageContent.companyId}")
         let reportTo = Employee.byFirstName("${directReport[0]}").where(.lastName == "${directReport[1]}").first();
         
-        Employee.create({
-            firstName: "${firstName}",
-            lastName: "${lastName}",
-            position: "${role}",
-            salary: ${salary},
-            dateJoined: "${dateJoined}",
-            phoneNum: "${phoneNum}",
-            employeeId: "${employeeId}",
-            email: "${email}",
-            directReport: reportTo,
-            company: company,
-            privilege: "EMPLOYEE"
-        })
-        
-        Signup({"${email}", "${password}", "${firstName}", "${lastName}", ${salary}, "${dateJoined}", reportTo, "${employeeId}", "${phoneNum}", "${position}", company, "${privilege}"})
+        Signup("${email}", "${password}", "${firstName}", "${lastName}", ${salary}, "${dateJoined}", reportTo, "${employeeId}", "${phoneNum}", "${position}", company, "${privilege}")
         `).then(response => {
             console.log(response);
             router.push("/");
@@ -92,6 +97,9 @@ export default function AddEmployee() {
     const redirect = (e) => {
         e.preventDefault();
         router.push("/")
+    }
+    const privilegeHandler = (e) => {
+        setPrivilege(e.target.value);
     }
 
     return (
@@ -122,7 +130,7 @@ export default function AddEmployee() {
 
                 <div className={styles.wrapper}>
                     <label>Position</label>
-                    <input onChange={roleHandler}/>       
+                    <input onChange={positionHandler}/>       
                 </div>
 
                 <div className={styles.wrapper}>
@@ -147,7 +155,27 @@ export default function AddEmployee() {
 
                 <div className={styles.wrapper}>
                     <label>Direct Report</label>
-                    <input onChange={directReportHandler}/>
+                    <select onChange={directReportHandler}>
+                        <option value="">Select a direct report</option>
+                        {directReportPersonnel.map((person) => (
+                        <option
+                            key={person.id}
+                            value={`${person.firstName} ${person.lastName}`}
+                        >
+                            {person.firstName} {person.lastName}
+                        </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className={styles.wrapper}>
+                    <label>Privilege</label>
+                    <select onChange={privilegeHandler}>
+                        <option value="">Select privilege status</option>
+                        <option value="EMPLOYEE"> Employee</option>
+                        <option value="MANAGER"> Manager</option>
+                        <option value="ADMIN"> Admin</option>
+                    </select>
                 </div>
 
                 <div className={styles.wrapper}>
