@@ -8,8 +8,6 @@ export default function EditEmployeeInfo(props) {
 
     const [employeeInfo, setEmployeeInfo] = useState({...props.info}) 
 
-    console.log(employeeInfo);
-
     const setModalVisible = (e) => {
         e.preventDefault();
         setModal(true);
@@ -38,7 +36,7 @@ export default function EditEmployeeInfo(props) {
 
             employeeToUpdate.update(${JSON.stringify(updatedValues)})
         `).then(result => {
-            console.log(result);
+            props.updateResponse();
             setModal(false);
         });
     }

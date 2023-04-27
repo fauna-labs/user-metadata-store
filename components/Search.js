@@ -37,7 +37,7 @@ export default function Search(props) {
     let separatedInput = inputValues.report.split(' ');
   
     let query = `
-    let company = Company.byId("${localStorageContent.companyId}")
+    let company = Company.byName("${localStorageContent.company}").first()
     let foundDirectReport = Employee.byFirstName("${separatedInput[0]}").where(.lastName == "${separatedInput[1]}").first()
   
     Employee.byCompany(company)`;
@@ -85,7 +85,7 @@ export default function Search(props) {
     console.log(query);
   
     db.query(`${query}`).then((result) => {
-      console.log(result);
+      console.log("first result",result);
       props.searchResponse(result?.data);
     });
   };  
@@ -110,7 +110,7 @@ export default function Search(props) {
       });
 
     db.query(`
-    let company = Company.byId("${localStorageContent.companyId}");
+    let company = Company.byName("${localStorageContent.company}").first()
     Employee.byCompany(company){
         id,
         firstName,
@@ -126,6 +126,7 @@ export default function Search(props) {
         position,
         privilege
     }`).then(result => {
+        console.log("second result", result);
         props.searchResponse(result?.data);
     })
   }

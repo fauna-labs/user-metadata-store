@@ -28,12 +28,16 @@ export default function AddEmployee() {
         const localStorageContent = JSON.parse(
             localStorage.getItem("employeeManager-loggedInUser")
           );
+
+          if(!localStorageContent) {
+            router.push("/");
+          }
         
         db.query(`
-            let company = Company.byId("${localStorageContent.companyId}")
+            let company = Company.byName("${localStorageContent.company}").first()
             Employee.byCompany(company).where(.privilege == "MANAGER" || .privilege == "ADMIN")
         `).then(result => {
-            setDirecReportPersonnel(result.data);
+            setDirecReportPersonnel(result?.data);
         })
     }
 

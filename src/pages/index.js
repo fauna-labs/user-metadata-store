@@ -56,7 +56,6 @@ export default function Home() {
       },
       privilege
     }`).then(result => {
-      console.log("BLEH",result);
       setSearchResult(result?.data);
     })
   }
@@ -73,6 +72,10 @@ export default function Home() {
 
   const searchResponse = (result) => {
     setSearchResult(result);
+  }
+
+  const updateResponse = (result) => {
+    getAllData();
   }
   
   return (
@@ -110,7 +113,6 @@ export default function Home() {
               {/* Visualizing the information based on the search */}
               <tbody>
                 {searchResult.map(info => {
-                  console.log(info.directReport);
                   return (
                     <tr className={styles.tr}>
                       <td className={styles.td}>{info.firstName}</td>
@@ -121,7 +123,7 @@ export default function Home() {
                       <td className={styles.td}>{info.phoneNum}</td>
                       <td className={styles.td}>{info.employeeId}</td>
                       <td className={styles.td}>{info.directReport.firstName} {info.directReport.lastName}</td>
-                      <EditEmployeeInfo info={info}/>
+                      <EditEmployeeInfo info={info} updateResponse={updateResponse}/>
                     </tr>
                   )
                 })
