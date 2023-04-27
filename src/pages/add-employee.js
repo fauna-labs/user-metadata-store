@@ -83,7 +83,20 @@ export default function AddEmployee() {
         let company = Company.byName("${localStorageContent.company}").first()
         let reportTo = Employee.byFirstName("${directReport[0]}").where(.lastName == "${directReport[1]}").first();
         
-        Signup("${email}", "${password}", "${firstName}", "${lastName}", ${salary}, "${dateJoined}", reportTo, "${employeeId}", "${phoneNum}", "${position}", company, "${privilege}")
+        Signup(
+            "${email}", 
+            "${password}", 
+            "${firstName}", 
+            "${lastName}", 
+            ${salary}, 
+            "${dateJoined}", 
+            reportTo, 
+            "${employeeId}", 
+            "${phoneNum}", 
+            "${position}", 
+            company, 
+            "${privilege}"
+        )
         `).then(response => {
             console.log(response);
             router.push("/");
