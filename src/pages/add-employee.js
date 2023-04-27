@@ -57,21 +57,24 @@ export default function AddEmployee() {
         e.preventDefault();
         const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
         db.query(`
-            let company = Company.byId("${localStorageContent.companyId}")
-            let reportTo = Employee.byFirstName("${directReport[0]}").where(.lastName == "${directReport[1]}").first();
-            
-            Employee.create({
-                firstName: "${firstName}",
-                lastName: "${lastName}",
-                position: "${role}",
-                salary: ${salary},
-                dateJoined: "${dateJoined}",
-                phoneNum: "${phoneNum}",
-                employeeId: "${employeeId}",
-                directReport: reportTo,
-                company: company,
-                privilege: "EMPLOYEE"
-            })
+        let company = Company.byId("${localStorageContent.companyId}")
+        let reportTo = Employee.byFirstName("${directReport[0]}").where(.lastName == "${directReport[1]}").first();
+        
+        Employee.create({
+            firstName: "${firstName}",
+            lastName: "${lastName}",
+            position: "${role}",
+            salary: ${salary},
+            dateJoined: "${dateJoined}",
+            phoneNum: "${phoneNum}",
+            employeeId: "${employeeId}",
+            email: "${email}",
+            directReport: reportTo,
+            company: company,
+            privilege: "EMPLOYEE"
+        })
+        
+        Signup({"${email}", "${password}", "${firstName}", "${lastName}", ${salary}, "${dateJoined}", reportTo, "${employeeId}", "${phoneNum}", "${position}", company, "${privilege}"})
         `).then(response => {
             console.log(response);
             router.push("/");
@@ -100,6 +103,11 @@ export default function AddEmployee() {
                 <div className={styles.wrapper}>
                 <label>Email</label>
                 <input onChange={emailHandler} />
+                </div>
+
+                <div className={styles.wrapper}>
+                    <label>Password</label>
+                    <input type="password" onChange={passwordHandler}/>
                 </div>
 
                 <div className={styles.wrapper}>
@@ -140,11 +148,6 @@ export default function AddEmployee() {
                 <div className={styles.wrapper}>
                     <label>Direct Report</label>
                     <input onChange={directReportHandler}/>
-                </div>
-
-                <div className={styles.wrapper}>
-                    <label>Password</label>
-                    <input type="password" onChange={passwordHandler}/>
                 </div>
 
                 <div className={styles.wrapper}>
