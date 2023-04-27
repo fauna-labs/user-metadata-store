@@ -30,11 +30,20 @@ export default function EditEmployeeInfo(props) {
         e.preventDefault();
         const updatedValues = {...employeeInfo}
         delete updatedValues.id;
+        const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
+
         db.query(`
             let employeeToUpdate = Employee.byId("${props.info.id}")
+            let company = Company.byName("${localStorageContent.company}").first()
 
-
-            employeeToUpdate.update(${JSON.stringify(updatedValues)})
+            employeeToUpdate.update({
+                "firstName" : "${employeeInfo.firstName}",
+                "lastName" : "${employeeInfo.lastName}",
+                "salary" : ${employeeInfo.salary},
+                "position" : "${employeeInfo.position}",
+                "phoneNum" : "${employeeInfo.phoneNum}",
+                "privilege" : "${employeeInfo.privilege}",
+            })
         `).then(result => {
             props.updateResponse();
             setModal(false);
@@ -97,9 +106,18 @@ export default function EditEmployeeInfo(props) {
                                         <td  className={styles.editableTd}>
                                             <input onChange={handleChange} value={employeeInfo.position} name="position"/>
                                         </td>
-                                        <td  className={styles.editableTd}>
+                                        {/* <td  className={styles.editableTd}>
                                             <input onChange={handleChange} value={employeeInfo.privilege} name="privilege"/>
+                                        </td> */}
+
+                                        <td className={styles.editableTd}>
+                                            <select onChange={handleChange} name="privilege" value={employeeInfo.privilege}>
+                                                <option value="EMPLOYEE">EMPLOYEE</option>
+                                                <option value="MANAGER">MANAGER</option>
+                                                <option value="ADMIN">ADMIN</option>
+                                            </select>                                            
                                         </td>
+
                                         </tr>
                                     </tbody>
 

@@ -38,7 +38,10 @@ export default function Home() {
   }, [])
 
   const getAllData = () => {
-    db.query(`Employee.all() {
+    const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
+    db.query(`
+    let company = Company.byName("${localStorageContent.company}").first()
+    Employee.byCompany(company) {
       id,
       firstName,
       lastName,
@@ -56,6 +59,7 @@ export default function Home() {
       },
       privilege
     }`).then(result => {
+      console.log(result?.data);
       setSearchResult(result?.data);
     })
   }
@@ -106,6 +110,7 @@ export default function Home() {
                   <th className={styles.th}>Phone #</th>
                   <th className={styles.th}>Employee Id</th>
                   <th className={styles.th}>Direct Report</th>
+                  <th className={styles.th}>Privilege</th>
                   <th className={styles.th}>Edit Info</th>
                 </tr>
               </thead>
@@ -123,6 +128,7 @@ export default function Home() {
                       <td className={styles.td}>{info.phoneNum}</td>
                       <td className={styles.td}>{info.employeeId}</td>
                       <td className={styles.td}>{info.directReport.firstName} {info.directReport.lastName}</td>
+                      <td className={styles.td}>{info.privilege}</td>
                       <EditEmployeeInfo info={info} updateResponse={updateResponse}/>
                     </tr>
                   )

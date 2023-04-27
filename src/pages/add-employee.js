@@ -80,7 +80,7 @@ export default function AddEmployee() {
         e.preventDefault();
         const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
         db.query(`
-        let company = Company.byId("${localStorageContent.companyId}")
+        let company = Company.byName("${localStorageContent.company}").first()
         let reportTo = Employee.byFirstName("${directReport[0]}").where(.lastName == "${directReport[1]}").first();
         
         Signup("${email}", "${password}", "${firstName}", "${lastName}", ${salary}, "${dateJoined}", reportTo, "${employeeId}", "${phoneNum}", "${position}", company, "${privilege}")
