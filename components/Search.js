@@ -111,8 +111,21 @@ export default function Search(props) {
 
     db.query(`
     let company = Company.byId("${localStorageContent.companyId}");
-    Employee.byCompany(company)
-    `).then(result => {
+    Employee.byCompany(company){
+        id,
+        firstName,
+        lastName,
+        salary,
+        dateJoined,
+        directReport {
+          firstName,
+          lastName
+        },
+        employeeId,
+        phoneNum,
+        position,
+        privilege
+    }`).then(result => {
         props.searchResponse(result?.data);
     })
   }

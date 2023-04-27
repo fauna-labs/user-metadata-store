@@ -33,7 +33,8 @@ export default function EditEmployeeInfo(props) {
         const updatedValues = {...employeeInfo}
         delete updatedValues.id;
         db.query(`
-            let employeeToUpdate = Employee.byId("${props.info.id}");
+            let employeeToUpdate = Employee.byId("${props.info.id}")
+
 
             employeeToUpdate.update(${JSON.stringify(updatedValues)})
         `).then(result => {
@@ -84,9 +85,11 @@ export default function EditEmployeeInfo(props) {
                                         </td>
                                         <td className={styles.td}>{props.info.dateJoined}</td>
 
-                                        <td  className={styles.editableTd}>
-                                            <input onChange={handleChange} value={employeeInfo.directReport} name="directReport"/>
-                                        </td>
+                                        {/* <td  className={styles.editableTd}>
+                                            <input onChange={handleChange} value={employeeInfo.directReport.firstName + " " + employeeInfo.directReport.lastName} name="directReport"/>
+                                        </td> */}
+
+                                        <td className={styles.td}>{employeeInfo.directReport.firstName + " " + employeeInfo.directReport.lastName}</td>
 
                                         <td className={styles.td}>{props.info.employeeId}</td>
 
