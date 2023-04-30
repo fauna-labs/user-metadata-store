@@ -21,17 +21,17 @@ export default function Login(props) {
     const signinHandler = (e) => {
         e.preventDefault();            
         db.query(`Login("${email}","${password}")`).then(result => {
-            // console.log(result);
+            console.log("login attempt",result);
             if(!result) {
                 setInvalidPassword(true);
             } else {
                 const userInfo = {
                     email: result.document.email,
                     id: result.id,
-                    company: result.document.company.name,
+                    company: result.document.company.id,
                     key: result.secret
                 }
-                console.log(userInfo);
+                console.log("available info",userInfo);
                 window.localStorage.setItem("employeeManager-loggedInUser", JSON.stringify(userInfo));
                 window.location.href = "/";
                 props.confirmLogin(true);

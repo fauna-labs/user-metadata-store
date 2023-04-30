@@ -34,7 +34,7 @@ export default function EditEmployeeInfo(props) {
 
         db.query(`
             let employeeToUpdate = Employee.byId("${props.info.id}")
-            let company = Company.byName("${localStorageContent.company}").first()
+            let company = Company.byId("${localStorageContent.company}")
 
             employeeToUpdate.update({
                 "firstName" : "${employeeInfo.firstName}",

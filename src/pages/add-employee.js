@@ -34,7 +34,7 @@ export default function AddEmployee() {
           }
         
         db.query(`
-            let company = Company.byName("${localStorageContent.company}").first()
+            let company = Company.byId("${localStorageContent.company}")
             Employee.byCompany(company).where(.privilege == "MANAGER" || .privilege == "ADMIN")
         `).then(result => {
             setDirecReportPersonnel(result?.data);
@@ -80,7 +80,7 @@ export default function AddEmployee() {
         e.preventDefault();
         const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
         db.query(`
-        let company = Company.byName("${localStorageContent.company}").first()
+        let company = Company.byId("${localStorageContent.company}")
         let reportTo = Employee.byFirstName("${directReport[0]}").where(.lastName == "${directReport[1]}").first();
         
         Signup(

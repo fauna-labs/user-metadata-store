@@ -40,7 +40,7 @@ export default function Home() {
   const getAllData = () => {
     const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
     db.query(`
-    let company = Company.byName("${localStorageContent.company}").first()
+    let company = Company.byId("${localStorageContent?.company}")
     Employee.byCompany(company) {
       id,
       firstName,

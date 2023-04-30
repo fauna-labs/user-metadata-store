@@ -37,7 +37,7 @@ export default function Search(props) {
     let separatedInput = inputValues.report.split(' ');
   
     let query = `
-    let company = Company.byName("${localStorageContent.company}").first()
+    let company = Company.byId("${localStorageContent.company}")
     let foundDirectReport = Employee.byFirstName("${separatedInput[0]}").where(.lastName == "${separatedInput[1]}").first()
   
     Employee.byCompany(company)`;
@@ -110,7 +110,7 @@ export default function Search(props) {
       });
 
     db.query(`
-    let company = Company.byName("${localStorageContent.company}").first()
+    let company = Company.byId("${localStorageContent.company}")
     Employee.byCompany(company){
         id,
         firstName,
