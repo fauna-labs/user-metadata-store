@@ -8,7 +8,8 @@ import Login from "../../components/Login";
 import Search from "../../components/Search";
 
 export default function Home() {
-  const db = new FaunaClient(process.env.NEXT_PUBLIC_FAUNA_KEY);
+  let [db, setDb] = useState(null)
+
   const router = useRouter();
   const [searchResult, setSearchResult] = useState([]);
 
@@ -18,13 +19,20 @@ export default function Home() {
     checkLoginStatus();
   }, []);
 
+  useEffect(() => {
+    if(db) {
+      getAllData();
+    }
+  }, [db])
+
   const checkLoginStatus = () => {
     const localStorageExists = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
     
     if (localStorageExists == null) {
           setLoggedin(false);
        } else {
-           setLoggedin(true);
+          setDb(new FaunaClient(localStorageExists.key))
+          setLoggedin(true);
        }
   }
 
@@ -32,10 +40,6 @@ export default function Home() {
     e.preventDefault();
     router.push("/add-employee");
   }
-
-  useEffect(() => {
-    getAllData();
-  }, [])
 
   const getAllData = () => {
     const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));

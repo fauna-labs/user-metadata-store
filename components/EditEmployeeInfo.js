@@ -3,7 +3,9 @@ import {useState} from "react";
 import styles from "../src/styles/EditEmployeeInfo.module.css"
 
 export default function EditEmployeeInfo(props) {
-    const db = new FaunaClient(process.env.NEXT_PUBLIC_FAUNA_KEY);
+    const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
+    const db = new FaunaClient(localStorageContent.key);
+    
     const [modal, setModal] = useState(false);
 
     const [employeeInfo, setEmployeeInfo] = useState({...props.info}) 
