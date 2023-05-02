@@ -5,13 +5,13 @@ import styles from "../src/styles/EditEmployeeInfo.module.css"
 export default function EditEmployeeInfo(props) {
     const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
     const db = new FaunaClient(localStorageContent.key);
-    
     const [modal, setModal] = useState(false);
-
-    const [employeeInfo, setEmployeeInfo] = useState({...props.info}) 
+    const [employeeInfo, setEmployeeInfo] = useState({...props.info});
+    const [directReportPersonnel, setDirecReportPersonnel] = useState([]); 
 
     const setModalVisible = (e) => {
         e.preventDefault();
+        getDirectReportPersonnel();
         setModal(true);
     }
 
@@ -22,9 +22,34 @@ export default function EditEmployeeInfo(props) {
 
     /** 💍 One Ringg to Rule em All 🧙‍♂️*/
     const handleChange = (e) => {
-        setEmployeeInfo({
-            ...employeeInfo,
-            [e.target.name]: e.target.value
+        if (e.target.name === "directReport") {
+            const selectedDirectReport = directReportPersonnel.find(person => person.id === e.target.value);
+            setEmployeeInfo({
+                ...employeeInfo,
+                directReport: selectedDirectReport,
+            });
+        } else {
+            setEmployeeInfo({
+                ...employeeInfo,
+                [e.target.name]: e.target.value
+            });
+        }
+    }
+
+    const getDirectReportPersonnel = () => {
+        const localStorageContent = JSON.parse(
+            localStorage.getItem("employeeManager-loggedInUser")
+          );
+
+          if(!localStorageContent) {
+            router.push("/");
+          }
+        
+        db.query(`
+            let company = Company.byId("${localStorageContent.company}")
+            Employee.byCompany(company).where(.privilege == "MANAGER" || .privilege == "ADMIN")
+        `).then(result => {
+            setDirecReportPersonnel(result?.data);
         })
     }
 
@@ -94,11 +119,16 @@ export default function EditEmployeeInfo(props) {
                                         </td>
                                         <td className={styles.td}>{props.info.dateJoined}</td>
 
-                                        {/* <td  className={styles.editableTd}>
-                                            <input onChange={handleChange} value={employeeInfo.directReport.firstName + " " + employeeInfo.directReport.lastName} name="directReport"/>
-                                        </td> */}
-
-                                        <td className={styles.td}>{employeeInfo.directReport.firstName + " " + employeeInfo.directReport.lastName}</td>
+                                        <td className={styles.editableTd}>
+                                            <select onChange={handleChange} name="directReport" value={employeeInfo.directReport.id}>
+                                                <option value={employeeInfo.directReport.id}>{employeeInfo.directReport.firstName + " " + employeeInfo.directReport.lastName}</option>
+                                                {directReportPersonnel.map((person, index) => (
+                                                    <option key={index} value={person.id}>
+                                                        {person.firstName + " " + person.lastName}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </td>
 
                                         <td className={styles.td}>{props.info.employeeId}</td>
 
@@ -108,9 +138,6 @@ export default function EditEmployeeInfo(props) {
                                         <td  className={styles.editableTd}>
                                             <input onChange={handleChange} value={employeeInfo.position} name="position"/>
                                         </td>
-                                        {/* <td  className={styles.editableTd}>
-                                            <input onChange={handleChange} value={employeeInfo.privilege} name="privilege"/>
-                                        </td> */}
 
                                         <td className={styles.editableTd}>
                                             <select onChange={handleChange} name="privilege" value={employeeInfo.privilege}>
