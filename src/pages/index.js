@@ -1,5 +1,3 @@
-// This is MANAGE ACCOUNTS PAGE
-import { useRouter } from "next/router";
 import FaunaClient from "../../Faunadoo";
 import { useState, useEffect } from "react";
 import styles from "../styles/ManageAccounts.module.css"; 
