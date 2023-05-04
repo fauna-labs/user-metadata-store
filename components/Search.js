@@ -228,8 +228,8 @@ export default function Search(props) {
             />
           </div>
         )}
-        <button onClick={searchHandler}>Search</button>
-        <button onClick={clearSearchHandler}>Clear</button>
+        <button className={styles.searchButtons} onClick={searchHandler}>Search</button>
+        <button className={styles.searchButtons} onClick={clearSearchHandler}>Clear</button>
       </div>
     </>
   );

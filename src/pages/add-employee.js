@@ -111,17 +111,12 @@ export default function AddEmployee() {
         setPassword(e.target.value);
     }
 
-    const redirect = (e) => {
-        e.preventDefault();
-        router.push("/")
-    }
     const privilegeHandler = (e) => {
         setPrivilege(e.target.value);
     }
 
     return (
         <div>
-            <button onClick={redirect}>Go To Employee Manager</button>
             <form onSubmit={employeeSubmitHandler}>
                 <h1> Add A New Employee</h1>
 

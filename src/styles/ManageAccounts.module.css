@@ -69,3 +69,18 @@
   border: solid 1px;
   padding: 10px;
 }
+
+.searchButtons {
+  border: 2px solid;
+  padding: 5px;
+  margin-right: 5px;
+  margin-top: 5px;
+  border-radius: 4px;
+  transition: all 0.14s ease-out 0s;
+}
+
+.searchButtons:hover {
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+}
