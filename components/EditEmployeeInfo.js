@@ -87,7 +87,7 @@ export default function EditEmployeeInfo(props) {
                               ✖️
                             </button>
 
-                            <div>
+                            <div className={styles.tableContainer}>
                                 <table className={styles.table}>
                                     {/* Visualizing the keys from the collection */}
                                     <thead>
@@ -150,7 +150,7 @@ export default function EditEmployeeInfo(props) {
                                     </tbody>
 
                                 </table>
-                                <button onClick={updateEmployeeData}>Save Changes</button>
+                                <button className={styles.saveChanges} onClick={updateEmployeeData}>Save Changes</button>
                             </div>
                           </div>
                         </div>

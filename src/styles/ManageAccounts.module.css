@@ -1,3 +1,26 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.filterContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.searchOption {
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.label {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
 .dropDown {
   margin-top: 5px;
   width: 87px;

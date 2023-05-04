@@ -133,9 +133,9 @@ export default function Search(props) {
 
   return (
     <>
-      <div>
-        <h3>Search options</h3>
-        <label>
+      <div className={styles.filterContainer}>
+        <h3 className={styles.searchOption}>🎛️ Search options</h3>
+        <label className={styles.label}>
           <input
             type="checkbox"
             name="firstName"
@@ -145,7 +145,7 @@ export default function Search(props) {
           First Name
         </label>
         <br />
-        <label>
+        <label className={styles.label}>
           <input
             type="checkbox"
             name="lastName"
@@ -155,7 +155,7 @@ export default function Search(props) {
           Last Name
         </label>
         <br />
-        <label>
+        <label className={styles.label}>
           <input
             type="checkbox"
             name="salary"
@@ -165,7 +165,7 @@ export default function Search(props) {
           Salary
         </label>
         <br />
-        <label>
+        <label className={styles.label}>
           <input
             type="checkbox"
             name="report"
