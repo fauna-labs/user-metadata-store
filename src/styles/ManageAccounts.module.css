@@ -37,7 +37,6 @@
   background-color: #f1f1f1;
 }
 .table {
-  width: 100%;
   border: 1px solid;
   border-collapse: collapse;
   margin-top: 10px;
@@ -45,5 +44,5 @@
 
 .tr, .td, .th {
   border: solid 1px;
-  padding: 15px;
+  padding: 10px;
 }

@@ -1,55 +1,85 @@
+
 /* MODAL */
 .modal {
-    position: fixed; /* Stay in place */
-    z-index: 11; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    background-color: rgba(0, 0, 0, 0.3);
-  }
-  
-  /* Modal Content */
-  .modalContent {
-    background-color: #ffffff;
-    color: #16123f;
-    margin: 0 auto;
-    border: 1px solid #888;
-    width: 100%;
-    height: 10%;
-  }
-  
-  /* The Close Button */
-  .close {
-    position: relative;
-    float: right;
-    top: 0;
-    font-size: 15px;
-    border: none;
-    cursor: pointer;
-    transition: all .2s ease-in-out;
-  }
-  
-  .close:hover,
-  .close:focus {
-    cursor: pointer;
-    transform: scale(1.1);
-  }
+  position: fixed; /* Stay in place */
+  z-index: 11; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgba(0, 0, 0, 0.3);
+}
 
-  /* the table */
-  .table {
-    width: 100%;
-    border: 1px solid;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
+.editButton {
+  background-color: #f1f1f1;
+  border: 1px solid #16123f;
+  color: #16123f;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 0 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.14s ease-out 0s;
+}
 
-  .tr, .td, .th {
-    border: solid 1px;
-  }
+.editButton:hover {
+  background-color: #f1f1f1;
+  transform: translate(-0.25rem, -0.25rem);
+  box-shadow: 0.25rem 0.25rem 0 #000000;
+}
+  
+/* Modal Content */
+.modalContent {
+  background-color: #ffffff;
+  color: #16123f;
+  margin: 0 auto;
+  border: 1px solid #888;
+  width: 100%;
+  height: 10%;
+}
 
-  .editableTd {
-    border: solid 1px;
-    background-color: blanchedalmond;
-  }
+/* The Close Button */
+.close {
+  position: relative;
+  float: right;
+  top: 0;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all .2s ease-in-out;
+}
+
+.close:hover,
+.close:focus {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+/* the table */
+.table {
+  width: 100%;
+  border: 1px solid;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.tr, .td, .th {
+  border: solid 1px;
+}
+
+.editableTd {
+  border: solid 1px;
+  background-color: blanchedalmond;
+}
+
+.editButtonCell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}

@@ -78,9 +78,8 @@ export default function EditEmployeeInfo(props) {
     }
 
     return (
-        <div>
-            <button onClick={setModalVisible} className="button">edit</button>
-
+        <div className={styles.editButtonCell}>
+            <button onClick={setModalVisible} className={styles.editButton}>edit</button>
             { modal? (
                           <div className={styles.modal}>
                           <div className={styles.modalContent}>
