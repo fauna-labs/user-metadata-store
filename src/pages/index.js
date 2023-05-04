@@ -6,12 +6,9 @@ import styles from "../styles/ManageAccounts.module.css";
 import EditEmployeeInfo from "../../components/EditEmployeeInfo";
 import Login from "../../components/Login";
 import Search from "../../components/Search";
-import Navbar from '../../components/Navbar'
 
 export default function Home() {
-  let [db, setDb] = useState(null)
-
-  const router = useRouter();
+  let [db, setDb] = useState(null);
   const [searchResult, setSearchResult] = useState([]);
 
   const [loggedin, setLoggedin] = useState(false);
@@ -81,10 +78,8 @@ export default function Home() {
       <>
         {
           loggedin ? (
-            <>
-            <Navbar />
+          <>
             <Search searchResponse = {searchResponse}/>
-
           <div>
             <table className={styles.table}>
               {/* Visualizing the keys from the collection */}
@@ -125,7 +120,7 @@ export default function Home() {
               </tbody>
             </table>
           </div>                       
-            </>
+          </>
           ) : (
           <Login confirmLogin = {confirmLogin}/>                      
           )

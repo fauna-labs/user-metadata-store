@@ -1,0 +1,33 @@
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  background-color: #F4F4EF;
+}
+
+.navLink {
+  text-decoration: none;
+  font-size: 20px;
+  padding: 12px 24px;
+  margin: 0 8px;
+  border: 2px solid;
+  transition: all 0.14s ease-out 0s;
+  border-radius: 4px;
+}
+
+.navLink:hover {
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transform: translate(-0.25rem, -0.25rem);
+  box-shadow: 0.25rem 0.25rem 0 #000000;
+}
+
+.logout {
+  background-color: #ea9d9d;
+}
+
+.logout:hover {
+  background-color: #f79089;
+}

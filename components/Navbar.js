@@ -1,4 +1,9 @@
-export default function Navbar({ searchResult, setSearchResult, db, setDb, loggedin, setLoggedin }) {
+import styles from "../src/styles/Nav.module.css"
+import { useRouter } from "next/router";
+
+export default function Navbar() {
+
+  const router = useRouter();
   
   const logoutHandler = (e) => {
     e.preventDefault();
@@ -6,19 +11,21 @@ export default function Navbar({ searchResult, setSearchResult, db, setDb, logge
     window.location.href = "/"
   }
 
-  const addEmployeeHandler = (e) => {
-    e.preventDefault();
-    router.push("/add-employee");
-  }
-
   return (
-    <nav>
-      <div>
-        <button onClick={logoutHandler}>Log-out</button>
-      </div>
-      <div>
-        <button onClick={addEmployeeHandler}>Add Employee</button>
-      </div>
+    <nav className={styles.navbar}>
+      <a className={styles.navLink} onClick={() => {
+        router.push("/");
+      }}>
+        All Employees
+      </a>
+      <a className={styles.navLink} onClick={() => {
+        router.push("/add-employee");
+      }}>
+        Add Employee
+      </a>
+      <a className={`${styles.navLink} ${styles.logout}`} onClick={logoutHandler}>
+        Log-out
+      </a>
     </nav>
   )
 }
