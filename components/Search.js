@@ -24,9 +24,20 @@ export default function Search(props) {
     console.log(searchOptions);
   };
 
+  const capitalizeWords = (input) => {
+    return input
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };  
+
   const handleInputChange = (e) => {
-    setInputValues({ ...inputValues, [e.target.name]: e.target.value });
-  };
+    if(e.target.name == "salary") {
+      setInputValues({...inputValues, [e.target.name]: e.target.value})
+    } else {
+      setInputValues({ ...inputValues, [e.target.name]: capitalizeWords(e.target.value) });
+    }
+  };  
 
   const searchHandler = (e) => {
     e.preventDefault();
@@ -45,11 +56,11 @@ export default function Search(props) {
     const conditions = [];
   
     if (searchOptions.firstName) {
-      conditions.push(`.firstName == "${inputValues.firstName}"`);
+      conditions.push(`.firstName.includes("${inputValues.firstName}")`);
     }
   
     if (searchOptions.lastName) {
-      conditions.push(`.lastName == "${inputValues.lastName}"`);
+      conditions.push(`.lastName.includes("${inputValues.lastName}")`);
     }
   
     if (searchOptions.salary) {
@@ -133,9 +144,9 @@ export default function Search(props) {
 
   return (
     <>
-      <div className={styles.filterContainer}>
-        <h3 className={styles.searchOption}>🎛️ Search options</h3>
-        <label className={styles.label}>
+      <div>
+        <h3>Search options</h3>
+        <label>
           <input
             type="checkbox"
             name="firstName"
@@ -145,7 +156,7 @@ export default function Search(props) {
           First Name
         </label>
         <br />
-        <label className={styles.label}>
+        <label>
           <input
             type="checkbox"
             name="lastName"
@@ -155,7 +166,7 @@ export default function Search(props) {
           Last Name
         </label>
         <br />
-        <label className={styles.label}>
+        <label>
           <input
             type="checkbox"
             name="salary"
@@ -165,7 +176,7 @@ export default function Search(props) {
           Salary
         </label>
         <br />
-        <label className={styles.label}>
+        <label>
           <input
             type="checkbox"
             name="report"
@@ -228,8 +239,8 @@ export default function Search(props) {
             />
           </div>
         )}
-        <button className={styles.searchButtons} onClick={searchHandler}>Search</button>
-        <button className={styles.searchButtons} onClick={clearSearchHandler}>Clear</button>
+        <button onClick={searchHandler}>Search</button>
+        <button onClick={clearSearchHandler}>Clear</button>
       </div>
     </>
   );
