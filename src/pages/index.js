@@ -6,6 +6,7 @@ import styles from "../styles/ManageAccounts.module.css";
 import EditEmployeeInfo from "../../components/EditEmployeeInfo";
 import Login from "../../components/Login";
 import Search from "../../components/Search";
+import Navbar from '../../components/Navbar'
 
 export default function Home() {
   let [db, setDb] = useState(null)
@@ -34,11 +35,6 @@ export default function Home() {
           setDb(new FaunaClient(localStorageExists.key))
           setLoggedin(true);
        }
-  }
-
-  const redirectHandler = (e) => {
-    e.preventDefault();
-    router.push("/add-employee");
   }
 
   const getAllData = () => {
@@ -72,12 +68,6 @@ export default function Home() {
     checkLoginStatus();
   }
 
-  const logoutHandler = (e) => {
-    e.preventDefault();
-    localStorage.removeItem("employeeManager-loggedInUser");
-    window.location.href = "/"
-  }
-
   const searchResponse = (result) => {
     setSearchResult(result);
   }
@@ -92,14 +82,8 @@ export default function Home() {
         {
           loggedin ? (
             <>
-              <div>
-                <button onClick={logoutHandler}>Log-out</button>
-              </div>
-              <div>
-                <button onClick={redirectHandler}>Add Employee</button>
-              </div>
-
-          <Search searchResponse = {searchResponse}/>
+            <Navbar />
+            <Search searchResponse = {searchResponse}/>
 
           <div>
             <table className={styles.table}>
