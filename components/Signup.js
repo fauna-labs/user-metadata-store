@@ -41,7 +41,11 @@ export default function Signup(props) {
         e.preventDefault();
         db.query(`
             let company = Company.byName("${company}")
+            let user = Employee.byEmail("${email}")
 
+            if(user != null) {
+                "This email is already taken"
+            }
             if(company != null) {
                 "A company with this name already exists"
             } else {
@@ -65,6 +69,8 @@ export default function Signup(props) {
         `).then(result => {
             if(result == "A company with this name already exists") {
                 setRepeatingCompany(true);
+            } else if (result == "This email is already taken") {
+                setRepeatingEmail(true);
             } else {
                 console.log(result, "SUCCESS!")
                 // setCompany("");
