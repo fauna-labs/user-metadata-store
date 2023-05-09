@@ -3,7 +3,7 @@ import FaunaClient from "../Faunadoo";
 import styles from "../src/styles/Login.module.css"
 
 export default function Signup(props) {
-    const db = new FaunaClient(process.env.REACT_APP_FAUNA_KEY);
+    const db = new FaunaClient(process.env.NEXT_PUBLIC_FAUNA_KEY);
     const [company, setCompany] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
