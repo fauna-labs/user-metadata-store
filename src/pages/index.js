@@ -22,20 +22,19 @@ export default function Home() {
   }, [db])
 
   const checkLoginStatus = () => {
-    const localStorageExists = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
+    const secrect = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
     
-    if (localStorageExists == null) {
-          setLoggedin(false);
-       } else {
-          setDb(new FaunaClient(localStorageExists.key))
-          setLoggedin(true);
-       }
+    if (!secrect) {
+      setLoggedin(false);
+    } else {
+      setDb(new FaunaClient(secrect))
+      setLoggedin(true);
+    }
   }
 
   const getAllData = () => {
-    const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
     db.query(`
-    let company = Company.byId("${localStorageContent?.company}")
+    let company = Query.identity().company
     Employee.byCompany(company) {
       id,
       firstName,
@@ -54,7 +53,6 @@ export default function Home() {
       },
       privilege
     }`).then(result => {
-      console.log(result?.data);
       setSearchResult(result?.data);
     })
   }

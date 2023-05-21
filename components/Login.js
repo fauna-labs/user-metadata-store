@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import FaunaClient from "../Faunadoo";
 import styles from "../src/styles/Login.module.css"
 import Signup from "./Signup";
@@ -20,25 +20,21 @@ export default function Login(props) {
         setPassword(e.target.value);
     }
 
-    const signinHandler = (e) => {
-        e.preventDefault();            
-        db.query(`Login("${email}","${password}")`).then(result => {
+    const signinHandler = async (e) => {
+        e.preventDefault();
+        
+        try {
+            const result = await db.query(`Login("${email}","${password}")`);
             console.log("login attempt",result);
             if(!result) {
-                setInvalidPassword(true);
+                alert("Username or password is incorrect");
             } else {
-                const userInfo = {
-                    email: result.document.email,
-                    id: result.id,
-                    company: result.document.company.id,
-                    key: result.secret
-                }
-                console.log("available info",userInfo);
-                window.localStorage.setItem("employeeManager-loggedInUser", JSON.stringify(userInfo));
+                window.localStorage.setItem("employeeManager-loggedInUser", JSON.stringify(result.secret));
                 window.location.href = "/";
-                props.confirmLogin(true);
             }
-        }).catch(error => {console.log(error)})
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const signupFormDisplayHandler = (e) => {
