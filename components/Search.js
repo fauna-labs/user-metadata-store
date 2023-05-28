@@ -1,9 +1,11 @@
 import { useState } from "react";
-import styles from "../src/styles/ManageAccounts.module.css";
 import FaunaClient from "../Faunadoo";
+import useCheckLogin from "../src/hooks/useCheckLogin";
+
 
 export default function Search(props) {
-  const db = new FaunaClient(process.env.NEXT_PUBLIC_FAUNA_KEY);
+  const { loggedin, db } = useCheckLogin();
+
   const [searchOptions, setSearchOptions] = useState({
     firstName: false,
     lastName: false,
@@ -41,14 +43,11 @@ export default function Search(props) {
 
   const searchHandler = (e) => {
     e.preventDefault();
-    const localStorageContent = JSON.parse(
-      localStorage.getItem("employeeManager-loggedInUser")
-    );
   
     let separatedInput = inputValues.report.split(' ');
   
     let query = `
-    let company = Company.byId("${localStorageContent.company}")
+    let company = Query.identity().company
     let foundDirectReport = Employee.byFirstName("${separatedInput[0]}").where(.lastName == "${separatedInput[1]}").first()
   
     Employee.byCompany(company)`;
@@ -93,8 +92,6 @@ export default function Search(props) {
         privilege
     }`
   
-    console.log(query);
-  
     db.query(`${query}`).then((result) => {
       console.log("first result",result);
       props.searchResponse(result?.data);
@@ -104,24 +101,23 @@ export default function Search(props) {
 
   const clearSearchHandler = (e) => {
     e.preventDefault();
-    const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
     setSearchOptions({
-        firstName: false,
-        lastName: false,
-        salary: false,
-        report: false,
-      });
+      firstName: false,
+      lastName: false,
+      salary: false,
+      report: false,
+    });
   
-      setInputValues({
-        firstName: "",
-        lastName: "",
-        minSalary: "",
-        maxSalary: "",
-        report: "",
-      });
+    setInputValues({
+      firstName: "",
+      lastName: "",
+      minSalary: "",
+      maxSalary: "",
+      report: "",
+    });
 
     db.query(`
-    let company = Company.byId("${localStorageContent.company}")
+    let company = Query.identity().company
     Employee.byCompany(company){
         id,
         firstName,

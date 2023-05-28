@@ -1,36 +1,19 @@
-import FaunaClient from "../../Faunadoo";
 import { useState, useEffect } from "react";
 import styles from "../styles/ManageAccounts.module.css"; 
 import EditEmployeeInfo from "../../components/EditEmployeeInfo";
 import Login from "../../components/Login";
 import Search from "../../components/Search";
+import useCheckLogin from "../hooks/useCheckLogin";
 
 export default function Home() {
-  let [db, setDb] = useState(null);
   const [searchResult, setSearchResult] = useState([]);
-
-  const [loggedin, setLoggedin] = useState(false);
-
-  useEffect(() => {
-    checkLoginStatus();
-  }, []);
+  const { loggedin, db } = useCheckLogin();
 
   useEffect(() => {
     if(db) {
       getAllData();
     }
-  }, [db])
-
-  const checkLoginStatus = () => {
-    const secrect = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
-    
-    if (!secrect) {
-      setLoggedin(false);
-    } else {
-      setDb(new FaunaClient(secrect))
-      setLoggedin(true);
-    }
-  }
+  }, [db]);
 
   const getAllData = () => {
     db.query(`
