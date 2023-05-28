@@ -4,7 +4,7 @@ import FaunaClient from "../../Faunadoo";
 import { useRouter } from "next/router"; 
 
 export default function AddEmployee() {
-    const db = new FaunaClient(process.env.NEXT_PUBLIC_FAUNA_KEY);
+    const [db, setDb] = useState(null);
     const router = useRouter();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -21,20 +21,24 @@ export default function AddEmployee() {
 
 
     useEffect(() => {
+        if(!db) {
+            const secrect = JSON.parse(
+                localStorage.getItem("employeeManager-loggedInUser")
+            );
+
+            if(!secrect) {
+                router.push("/");
+            }
+
+            setDb(new FaunaClient(secrect));
+        }
         getDirectReportPersonnel();
-    }, [])
+    }, [db])
 
     const getDirectReportPersonnel = () => {
-        const localStorageContent = JSON.parse(
-            localStorage.getItem("employeeManager-loggedInUser")
-          );
-
-          if(!localStorageContent) {
-            router.push("/");
-          }
-        
+        if (!db) return;
         db.query(`
-            let company = Company.byId("${localStorageContent.company}")
+            let company = Query.identity().company
             Employee.byCompany(company).where(.privilege == "MANAGER" || .privilege == "ADMIN")
         `).then(result => {
             setDirecReportPersonnel(result?.data);
@@ -78,9 +82,8 @@ export default function AddEmployee() {
 
     const employeeSubmitHandler = (e) => {
         e.preventDefault();
-        const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
         db.query(`
-        let company = Company.byId("${localStorageContent.company}")
+        let company = Query.identity().company
         let reportTo = Employee.byFirstName("${directReport[0]}").where(.lastName == "${directReport[1]}").first();
         
         Signup(
