@@ -1,10 +1,9 @@
-import FaunaClient from "../Faunadoo";
+import useCheckLogin from "../src/hooks/useCheckLogin";
 import {useState} from "react";
 import styles from "../src/styles/EditEmployeeInfo.module.css"
 
 export default function EditEmployeeInfo(props) {
-    const localStorageContent = JSON.parse(localStorage.getItem("employeeManager-loggedInUser"));
-    const db = new FaunaClient(localStorageContent.key);
+    const { loggedin, db } = useCheckLogin();
     const [modal, setModal] = useState(false);
     const [employeeInfo, setEmployeeInfo] = useState({...props.info});
     const [directReportPersonnel, setDirecReportPersonnel] = useState([]); 
@@ -37,16 +36,12 @@ export default function EditEmployeeInfo(props) {
     }
 
     const getDirectReportPersonnel = () => {
-        const localStorageContent = JSON.parse(
-            localStorage.getItem("employeeManager-loggedInUser")
-          );
-
-          if(!localStorageContent) {
-            router.push("/");
-          }
+        if(!loggedin) {
+            window.location.href = "/";
+        };
         
         db.query(`
-            let company = Company.byId("${localStorageContent.company}")
+            let company = Query.identity().company
             Employee.byCompany(company).where(.privilege == "MANAGER" || .privilege == "ADMIN")
         `).then(result => {
             setDirecReportPersonnel(result?.data);

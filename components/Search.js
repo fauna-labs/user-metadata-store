@@ -1,5 +1,4 @@
 import { useState } from "react";
-import FaunaClient from "../Faunadoo";
 import useCheckLogin from "../src/hooks/useCheckLogin";
 
 
