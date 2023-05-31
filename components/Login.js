@@ -68,7 +68,7 @@ export default function Login(props) {
                         </button>
                     </form>
 
-                    <button className="btn" onClick={signupFormDisplayHandler}>don't have an account?</button>
+                    <a className="signupBtn" onClick={signupFormDisplayHandler}>don't have an account?</a>
                 </>
             ) : (
                 <Signup displayLogin={displayLogin} />

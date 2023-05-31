@@ -3,3 +3,35 @@
   padding: 0;
   font-family: monospace;
 }
+
+.button {
+  background-color: #dfea9d;
+  border: 2px solid;
+  border-radius: 5px;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+.button:hover {
+  background-color: #c9e26f;
+  cursor: pointer;
+}
+
+.container {
+  margin-top: 10px;
+}
+
+.signupBtn {
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin-top: 15px;
+  cursor: pointer;
+  text-decoration: underline;
+}

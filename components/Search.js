@@ -1,7 +1,6 @@
 import { useState } from "react";
 import useCheckLogin from "../src/hooks/useCheckLogin";
 
-
 export default function Search(props) {
   const { loggedin, db } = useCheckLogin();
 
@@ -234,8 +233,10 @@ export default function Search(props) {
             />
           </div>
         )}
-        <button onClick={searchHandler}>Search</button>
-        <button onClick={clearSearchHandler}>Clear</button>
+        <div className="container">
+          <button className="button" onClick={searchHandler}>Search</button>
+          <button className="button" onClick={clearSearchHandler}>Clear</button>
+        </div>
       </div>
     </>
   );

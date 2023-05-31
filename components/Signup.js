@@ -120,12 +120,14 @@ export default function Signup(props) {
                     <input  className="input" type="password" onChange={passwordHandler} required/>
                 </div>
 
-                <button className="btn" type="submit">sign-up</button>
+                <div className="container">
+                    <button className="button" type="submit">sign-up</button>
+                </div>
 
             </form>
 
-            <div>
-                <button className="btn" onClick={redirectToSigninHandler}>back to sign-in</button>
+            <div className="container">
+                <a className="signupBtn" onClick={redirectToSigninHandler}>back to sign-in</a>
             </div>
         </>
     )
