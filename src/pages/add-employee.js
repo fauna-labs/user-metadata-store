@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import  styles from "../styles/AddEmployee.module.css";
+import  styles from "../styles/addEmployee.module.css";
 import FaunaClient from "../../Faunadoo";
 import { useRouter } from "next/router"; 
 
