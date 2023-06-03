@@ -169,21 +169,6 @@ export default function AddEmployee() {
                 </div>
 
                 <div className={styles.wrapper}>
-                    <label>Direct Report</label>
-                    <select onChange={directReportHandler}>
-                        <option value="">Select a direct report</option>
-                        {directReportPersonnel.map((person) => (
-                        <option
-                            key={person.id}
-                            value={`${person.firstName} ${person.lastName}`}
-                        >
-                            {person.firstName} {person.lastName}
-                        </option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className={styles.wrapper}>
                     <label>Privilege</label>
                     <select onChange={privilegeHandler}>
                         <option value="">Select privilege status</option>

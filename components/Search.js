@@ -21,21 +21,13 @@ export default function Search(props) {
 
   const handleOptionSelection = (e) => {
     setSearchOptions({ ...searchOptions, [e.target.name]: e.target.checked });
-    console.log(searchOptions);
   };
-
-  const capitalizeWords = (input) => {
-    return input
-      .split(' ')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
-  };  
 
   const handleInputChange = (e) => {
     if(e.target.name == "salary") {
       setInputValues({...inputValues, [e.target.name]: e.target.value})
     } else {
-      setInputValues({ ...inputValues, [e.target.name]: capitalizeWords(e.target.value) });
+      setInputValues({ ...inputValues, [e.target.name]: e.target.value });
     }
   };  
 
@@ -43,10 +35,12 @@ export default function Search(props) {
     e.preventDefault();
   
     let separatedInput = inputValues.report.split(' ');
+
+    console.log(separatedInput);
   
     let query = `
     let company = Query.identity().company
-    let foundDirectReport = Employee.byFirstName("${separatedInput[0]}").where(.lastName == "${separatedInput[1]}").first()
+    let foundDirectReport = Employee.where(.firstName == "${separatedInput[0]}" && .lastName == "${separatedInput[1]}").first()
   
     Employee.byCompany(company)`;
   
@@ -89,6 +83,8 @@ export default function Search(props) {
         position,
         privilege
     }`
+
+    console.log(query);
   
     db.query(`${query}`).then((result) => {
       console.log("first result",result);
