@@ -88,7 +88,7 @@ export default function Home() {
                   <td className={styles.td}>{info.dateJoined}</td>
                   <td className={styles.td}>{info.phoneNum}</td>
                   <td className={styles.td}>{info.employeeId}</td>
-                  <td className={styles.td}>{info.directReport.firstName} {info.directReport.lastName}</td>
+                  <td className={styles.td}>{info.directReport?.firstName} {info.directReport?.lastName}</td>
                   <td className={styles.td}>{info.privilege}</td>
                   <EditEmployeeInfo info={info} updateResponse={updateResponse}/>
                 </tr>

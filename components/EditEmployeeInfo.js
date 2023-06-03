@@ -114,8 +114,8 @@ export default function EditEmployeeInfo(props) {
                                         <td className={styles.td}>{props.info.dateJoined}</td>
 
                                         <td className={styles.editableTd}>
-                                            <select onChange={handleChange} name="directReport" value={employeeInfo.directReport.id}>
-                                                <option value={employeeInfo.directReport.id}>{employeeInfo.directReport.firstName + " " + employeeInfo.directReport.lastName}</option>
+                                            <select onChange={handleChange} name="directReport" value={employeeInfo.directReport?.id}>
+                                                <option value={employeeInfo.directReport?.id}>{employeeInfo.directReport ? employeeInfo.directReport.firstName + employeeInfo.directReport.lastName : 'No Direct Report'}</option>
                                                 {directReportPersonnel.map((person, index) => (
                                                     <option key={index} value={person.id}>
                                                         {person.firstName + " " + person.lastName}

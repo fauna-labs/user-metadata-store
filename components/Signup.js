@@ -1,6 +1,6 @@
-import { useState} from "react";
+import { useState } from "react";
 import FaunaClient from "../Faunadoo";
-import styles from "../src/styles/Login.module.css"
+import { useRouter } from "next/router";
 
 export default function Signup(props) {
     const db = new FaunaClient(process.env.NEXT_PUBLIC_FAUNA_KEY);
@@ -11,6 +11,8 @@ export default function Signup(props) {
     const [password, setPassword] = useState("");
     const [repeatingEmail, setRepeatingEmail] = useState(false);
     const [repeatingCompany, setRepeatingCompany] = useState(false);
+
+    const router = useRouter();
 
     const companyHandler = (e) => {
         e.preventDefault();
@@ -39,47 +41,11 @@ export default function Signup(props) {
 
     const signupHandler = (e) => {
         e.preventDefault();
-        db.query(`
-            let company = Company.byName("${company}")
-            let user = Employee.byEmail("${email}")
-
-            if(user != null) {
-                "This email is already taken"
-            }
-            if(company != null) {
-                "A company with this name already exists"
-            } else {
-                Company.create({"name": "${company}"})
-                let company = Company.byName("${company}")
-                CompanyCreate(
-                    "${email}", 
-                    "${password}", 
-                    "${firstName}", 
-                    "${lastName}", 
-                    0, 
-                    "${Math.floor(new Date().getTime() / 1000)}", 
-                    "", 
-                    "", 
-                    "", 
-                    "", 
-                    company, 
-                    "ADMIN"
-                )
-            }
-        `).then(result => {
-            if(result == "A company with this name already exists") {
-                setRepeatingCompany(true);
-            } else if (result == "This email is already taken") {
-                setRepeatingEmail(true);
-            } else {
-                console.log(result, "SUCCESS!")
-                // setCompany("");
-                // setEmail("");
-                // setFirstName("");
-                // setLastName("");
-                // setPassword("");
-                // props.displayLogin(false);
-            }
+        db.query(`CompanyCreate("${email}", "${password}", "${firstName}", "${lastName}", "${company}")`)
+        .then(result => {
+            console.log(result);
+            alert("Sign-up successful!, please sign-in to continue.");
+            router.push("/");
         });
     }
 
